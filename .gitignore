@@ -26,3 +26,7 @@ Thumbs.db
 agent1_world_model.json
 sample_state.json
 graph_output.txt
+*.txt
+*.md
+!README.md
+!requirements.txt
