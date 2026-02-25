@@ -1,0 +1,203 @@
+﻿Project Objective – NexusQA
+What We Are Building
+We are building NexusQA, an autonomous AI-powered Bug & Hygiene Discovery Engine.
+Its purpose is to automatically explore, analyze, and evaluate any web application — without requiring predefined test scripts — and generate a structured understanding of its quality, risks, and defects.
+Unlike traditional QA tools that depend on manual scripting, NexusQA independently:
+* Crawls and maps application structure
+
+* Understands page types and navigation flows
+
+* Detects functional, UI, performance, accessibility, and security issues
+
+* Classifies and prioritizes defects
+
+* Generates a structured defect knowledge graph
+
+* Calculates a hygiene score representing overall application quality
+
+* Produces reproducible test scripts for detected issues
+
+In short, we are building a self-driven QA intelligence engine.
+________________
+
+
+🎯 What the System Actually Does
+NexusQA performs five core functions:
+________________
+
+
+1️⃣ Autonomous Discovery
+The system starts with a single URL.
+
+
+It:
+   * Explores the entire application
+
+   * Handles Single Page Applications (SPAs)
+
+   * Interacts with buttons, forms, search fields
+
+   * Handles authentication (OAuth2, SSO, token-based systems)
+
+   * Identifies page types (dashboard, form, list, wizard, report, etc.)
+
+   * Maps the navigation flow between states
+
+It builds a complete structural map of the application.
+________________
+
+
+2️⃣ Intelligent Bug Detection
+During and after exploration, NexusQA:
+      * Monitors DOM structure
+
+      * Tracks console errors
+
+      * Analyzes network requests
+
+      * Observes browser telemetry
+
+      * Identifies broken flows
+
+      * Detects missing validations
+
+      * Detects UI inconsistencies
+
+      * Identifies performance bottlenecks
+
+      * Checks accessibility violations
+
+      * Detects hygiene issues (SEO gaps, layout issues, structural problems)
+
+It does not just execute tests — it analyzes behavior.
+________________
+
+
+3️⃣ Defect Knowledge Graph Generation
+Instead of producing flat reports, the system creates a structured graph linking:
+Page → Element → Issue Type → Severity → Reproducibility
+This creates:
+         * Clear traceability
+
+         * Context-aware defect classification
+
+         * Impact-based prioritization
+
+         * Root-cause correlation across flows
+
+This structured intelligence enables deeper quality insights.
+________________
+
+
+4️⃣ Hygiene Scoring & Risk Assessment
+For every page and for the entire application, NexusQA:
+            * Calculates defect density
+
+            * Evaluates issue severity distribution
+
+            * Classifies risk levels
+
+            * Generates an overall Hygiene Score
+
+The hygiene score provides a measurable quality index representing:
+               * Functional stability
+
+               * UI consistency
+
+               * Accessibility compliance
+
+               * Performance health
+
+               * Structural cleanliness
+
+This turns qualitative QA findings into quantitative intelligence.
+________________
+
+
+5️⃣ Reproducible AI-Driven Test Cycles
+For critical issues, NexusQA:
+                  * Reconstructs the exact path used to find the defect
+
+                  * Generates a reproducible Playwright script
+
+                  * Enables developers to replay and validate issues instantly
+
+This bridges the gap between detection and resolution.
+________________
+
+
+❓ Why This Is Needed
+Modern web applications are:
+                     * Highly dynamic (SPAs, microservices)
+
+                     * Rapidly deployed (CI/CD)
+
+                     * Increasingly complex
+
+                     * Difficult to manually test thoroughly
+
+Traditional QA approaches:
+                        * Require manual scripting
+
+                        * Struggle with modern frontend routing
+
+                        * Produce fragmented reports
+
+                        * Lack intelligent prioritization
+
+                        * Do not autonomously adapt to new flows
+
+As applications scale, manual testing and static automation cannot keep up.
+Enterprises need:
+                           * Autonomous discovery
+
+                           * Intelligent classification
+
+                           * Structured defect mapping
+
+                           * Scalable performance validation
+
+                           * Quantified quality metrics
+
+                           * Fast reproducibility
+
+NexusQA addresses this gap by acting as an AI-driven quality inspector that continuously explores, analyzes, and evaluates applications independently.
+________________
+
+
+🏗 The Core Mission
+To build a unified AI engine that:
+                              * Crawls any web application
+
+                              * Understands its structure
+
+                              * Detects defects across multiple dimensions
+
+                              * Classifies and scores hygiene
+
+                              * Visualizes risk clearly
+
+                              * Enables faster resolution
+
+Essentially:
+NexusQA functions as a self-driven QA inspector that converts complex application behavior into structured, actionable quality intelligence.
+________________
+
+
+🧩 In One Sentence
+NexusQA is an autonomous AI system that explores web applications like a human tester, analyzes them like a security auditor, scores them like a quality engineer, and documents them like a structured intelligence platform.
+________________
+
+
+🏆 What Makes It Different
+                                 * No manual scripting required
+
+                                 * Multi-agent architecture
+
+                                 * Structural + behavioral understanding
+
+                                 * Knowledge graph–based defect mapping
+
+                                 * Quantified hygiene scoring
+
+                                 * Reproducible issue generation

@@ -1,0 +1,6 @@
+crawl4ai
+w3lib
+lxml
+neo4j
+playwright
+aiohttp
