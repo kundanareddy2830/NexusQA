@@ -24,18 +24,20 @@ def log_event(event_type, **kwargs):
 
 # --- SECURE ENVIRONMENT LOADING ---
 load_dotenv()
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 try:
-    if GEMINI_API_KEY:
-        import google.generativeai as genai
-        # DOWNGRADE TO STABLE MODEL FOR HIGHER FREE TIER QUOTA
-        genai.configure(api_key=GEMINI_API_KEY)
-        HAS_GEMINI = True
+    if GROQ_API_KEY:
+        from openai import OpenAI
+        client = OpenAI(
+            api_key=GROQ_API_KEY,
+            base_url="https://api.groq.com/openai/v1",
+        )
+        HAS_LLM = True
     else:
-        HAS_GEMINI = False
+        HAS_LLM = False
 except ImportError:
-    HAS_GEMINI = False
+    HAS_LLM = False
 
 APP_ID = "juice_shop"
 
@@ -52,16 +54,11 @@ def get_llm_business_insight(intent, defect_type, description):
         print(f"    [LLM CACHE HIT] Reusing insight for {defect_type} on {intent}")
         return _llm_cache[cache_key]
 
-    if not HAS_GEMINI:
+    if not HAS_LLM:
         return f"AI Insight: Severe business risk. {defect_type} on a {intent} page directly impacts user trust and conversion funnels."
     
     try:
-        # 2. Use the stable 1.5-flash model (15 RPM limit vs 2.5's 5 RPM limit)
-        model = genai.GenerativeModel('gemini-1.5-flash')
-        
         prompt = f"""
-        You are a senior DevSecOps QA architect.
-
         Analyze the following defect from business, security, and user experience perspective.
 
         Page Intent: {intent}
@@ -74,8 +71,14 @@ def get_llm_business_insight(intent, defect_type, description):
         Do not explain coding details.
         Be executive level insight.
         """
-        response = model.generate_content(prompt)
-        insight = f"AI Insight: {response.text.strip()}"
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[
+                {"role": "system", "content": "You are a senior DevSecOps QA architect."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        insight = f"AI Insight: {response.choices[0].message.content.strip()}"
         
         # 3. Save to cache for future use
         _llm_cache[cache_key] = insight
@@ -95,10 +98,10 @@ def run_inspector():
     print("=======================================================")
     log_event("lifecycle", stage="agent_start", description="Launching Agent 2 (The Inspector)")
     
-    if HAS_GEMINI:
-        print("🟢 Secure Gemini API Key Loaded. AI Reasoning is ACTIVE (With Caching).")
+    if HAS_LLM:
+        print("🟢 Secure Groq API Key Loaded. AI Reasoning is ACTIVE (With Caching).")
     else:
-        print("🟡 No Gemini API Key found in .env. Using fallback reasoning.")
+        print("🟡 No Groq API Key found in .env. Using fallback reasoning.")
 
     storage = StorageManager()
     
@@ -161,16 +164,13 @@ def run_inspector():
 
                 # AI Decision Moment
                 risk_score = state.get('ai_intel', {}).get('composition_vector', {}).get('risk_score', 0)
-                if i['severity'] in ["HIGH", "CRITICAL"] or risk_score >= 15:
-                    i['ai_insight'] = get_llm_business_insight(intent, i['type'], i['description'])
+                i['ai_insight'] = get_llm_business_insight(intent, i['type'], i['description'])
                     
                 storage.save_issue(state_id, i, APP_ID, session_id)
                 severity_counts[i['severity']] += 1
                 layer_counts[i['layer']] += 1
                 total_issues += 1
-                
-                log_event("issue_found", url=url, issue_type=i["type"], severity=i["severity"], layer=i["layer"], description=i["description"])
-                
+                log_event("issue_found", url=url, issue_type=i["type"], severity=i["severity"], layer=i["layer"], description=i["description"], ai_insight=i.get("ai_insight"))
     storage.close()
     
     log_event("lifecycle", stage="agent_shutdown", total_issues=total_issues, severity_summary=severity_counts, layer_summary=layer_counts)
