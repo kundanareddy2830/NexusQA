@@ -2,8 +2,20 @@ import React from 'react';
 import { Activity, AlertTriangle } from 'lucide-react';
 
 const HealthScoreCard: React.FC = () => {
-    const score = 84;
-    const status = 'Needs Attention';
+    const [score, setScore] = React.useState(100);
+    const [status, setStatus] = React.useState('Analyzing...');
+
+    React.useEffect(() => {
+        fetch('/api/stats')
+            .then(res => res.json())
+            .then(data => {
+                setScore(data.health_score);
+                if (data.health_score > 90) setStatus('Healthy');
+                else if (data.health_score > 70) setStatus('Needs Attention');
+                else setStatus('Critical Risk');
+            })
+            .catch(console.error);
+    }, []);
 
     return (
         <div className="white-card" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px', flex: 1 }}>

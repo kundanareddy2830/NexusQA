@@ -8,6 +8,9 @@ import QualityReports from './pages/QualityReports';
 import AgentDiscovery from './pages/AgentDiscovery';
 import AgentAnalysis from './pages/AgentAnalysis';
 import AgentReporting from './pages/AgentReporting';
+import KnowledgeGraph from './pages/KnowledgeGraph';
+import AgentInspector from './pages/AgentInspector';
+import AgentStrategist from './pages/AgentStrategist';
 
 function App() {
   return (
@@ -24,6 +27,10 @@ function App() {
           <Route path="agent/discovery" element={<AgentDiscovery />} />
           <Route path="agent/analysis" element={<AgentAnalysis />} />
           <Route path="agent/reporting" element={<AgentReporting />} />
+          <Route path="knowledge-graph" element={<KnowledgeGraph mode="health" />} />
+          <Route path="topology" element={<KnowledgeGraph mode="topology" />} />
+          <Route path="agent/inspector" element={<AgentInspector />} />
+          <Route path="agent/strategist" element={<AgentStrategist />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

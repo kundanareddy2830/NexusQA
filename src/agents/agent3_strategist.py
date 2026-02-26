@@ -150,12 +150,16 @@ def analyze_risk():
     trans_ratio = (intent_risk["TRANSACTIONAL"] / total_risk_score) if total_risk_score > 0 else 0
     pub_ratio = (intent_risk["PUBLIC"] / total_risk_score) if total_risk_score > 0 else 0
     
-    # 🔥 Normalized System Score (0-100)
-    theoretical_max_risk = len(processed_nodes) * 45.0 
-    normalized_score = min(100, round((total_risk_score / theoretical_max_risk) * 100)) if len(processed_nodes) > 0 else 0
+    # 🔥 Normalized Hygiene Score (0-100)
+    # A total_risk_score of 100+ represents a critical system failure.
+    # We use a non-linear sensitivity: small total risks still impact the score.
+    # Hygiene = 100 - min(100, risk)
+    risk_percentage = min(100, round(total_risk_score))
+    hygiene_score = 100 - risk_percentage
     
     report = {
-        "overall_risk_score": normalized_score,
+        "overall_risk_score": risk_percentage, # Renamed to reflect current risk percentage
+        "hygiene_score": hygiene_score,        # Absolute health of the system
         "raw_risk": round(total_risk_score, 1),
         "rci": round(rci, 2),
         "intent_ratios": {
@@ -175,12 +179,12 @@ def print_executive_summary(report):
     print("=======================================================")
     print(" 📈 AGENT 3: THE STRATEGIST (Executive Risk Engine)")
     print("=======================================================")
-    print(f"\n📊 Overall System Risk Score : {report['overall_risk_score']}/100")
+    print(f"\n📊 Overall System Hygiene Score : {report['hygiene_score']}/100")
     
-    score = report["overall_risk_score"]
-    if score > 75: print("   Status: 🚨 CRITICAL DANGER")
-    elif score > 40: print("   Status: ⚠️ ELEVATED THREAT")
-    else: print("   Status: ✅ ACCEPTABLE POSTURE")
+    score = report["hygiene_score"]
+    if score < 40: print("   Status: 🚨 CRITICAL RISK")
+    elif score < 75: print("   Status: ⚠️ ELEVATED CONCERN")
+    else: print("   Status: ✅ HEALTHY POSTURE")
     
     print(f"\n🔥 Risk Concentration Index (RCI): {report['rci']}")
     if report['rci'] > 0.6:

@@ -123,27 +123,89 @@ API_INTERCEPTOR_JS = """
 })();
 """
 
+# Global hook for the API layer to receive screenshots in real-time
+_screenshot_callback = None
+
+def register_screenshot_callback(fn):
+    """Register an async function that will be called with (url, base64_png) on each page load."""
+    global _screenshot_callback
+    _screenshot_callback = fn
+
 class FetchResult:
-    def __init__(self, success=False, html="", is_http_auth=False, auth_type="NONE", status_code=0, final_url=""):
+    def __init__(self, success=False, html="", is_http_auth=False, auth_type="NONE", status_code=0, final_url="", screenshot=None):
         self.success = success
         self.html = html
         self.is_http_auth = is_http_auth
         self.auth_type = auth_type
         self.status_code = status_code
         self.final_url = final_url
+        self.screenshot = screenshot
 
 class AgentCrawler:
-    def __init__(self):
-        self.browser_config = BrowserConfig(headless=False, verbose=True, text_mode=True)
+    def __init__(self, frame_callback=None):
+        self.browser_config = BrowserConfig(headless=True, verbose=True, text_mode=True)
         self.crawler = None
+        self._frame_callback = frame_callback  # sync callable(url, jpeg_b64)
+        self._cdp_session = None
+        self._screencast_task = None
 
     async def __aenter__(self):
         self.crawler = AsyncWebCrawler(config=self.browser_config)
         await self.crawler.start()
+        if self._frame_callback:
+            # Start CDP screencast a moment after browser launches
+            asyncio.ensure_future(self._start_screencast())
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self._stop_screencast()
         if self.crawler: await self.crawler.close()
+
+    async def _start_screencast(self):
+        """Poll the active browser page every 500ms and stream JPEG frames as live video."""
+        import base64
+        await asyncio.sleep(2)  # let browser initialize
+
+        self._stop_flag = False
+
+        while not self._stop_flag:
+            try:
+                strategy = self.crawler.crawler_strategy
+                bm = getattr(strategy, 'browser_manager', None)
+                browser = getattr(bm, 'browser', None) if bm else None
+
+                if browser:
+                    # Find the most recently active, non-closed page
+                    active_page = None
+                    for ctx in browser.contexts:
+                        for p in reversed(ctx.pages):
+                            try:
+                                if not p.is_closed():
+                                    active_page = p
+                                    break
+                            except Exception:
+                                pass
+                        if active_page:
+                            break
+
+                    if active_page:
+                        raw = await active_page.screenshot(type='jpeg', quality=65, full_page=False)
+                        b64 = base64.b64encode(raw).decode()
+                        if self._frame_callback:
+                            try:
+                                self._frame_callback(active_page.url, b64)
+                            except Exception:
+                                pass
+            except Exception as e:
+                pass  # Browser not ready yet, keep polling
+
+            await asyncio.sleep(0.5)  # ~2fps — smooth enough for live monitoring
+
+    async def _stop_screencast(self):
+        self._stop_flag = True
+        self._cdp_session = None
+
+
 
     async def check_http_auth(self, url: str):
         """Fallback to deterministically check WWW-Authenticate headers."""
@@ -186,20 +248,41 @@ class AgentCrawler:
         combined_js = API_INTERCEPTOR_JS
         if custom_js: combined_js += f"\n{custom_js}"
 
+        # Use shorter delay when there's a live UI consumer watching (faster screenshots)
+        _has_live_consumer = bool(globals().get('_screenshot_callback_sync'))
         config = CrawlerRunConfig(
             cache_mode=CacheMode.BYPASS,
-            delay_before_return_html=3.0, 
+            delay_before_return_html=1.0 if _has_live_consumer else 3.0,
             magic=True,
             page_timeout=300000, 
             wait_for="js:() => document.readyState === 'complete'", 
             js_code=combined_js,
-            session_id=session_id 
+            session_id=session_id,
+            screenshot=True  # Capture a base64 PNG of each page for live UI streaming
         )
         if strategy: config.extraction_strategy = strategy
         
         try:
             res = await self.crawler.arun(url=url, config=config)
             
+            # Fire screenshot callback if registered (for live UI streaming)
+            screenshot_b64 = getattr(res, 'screenshot', None)
+            if screenshot_b64:
+                # Async callback path (direct FastAPI context)
+                if _screenshot_callback:
+                    try:
+                        import asyncio as _asyncio
+                        _asyncio.ensure_future(_screenshot_callback(url, screenshot_b64))
+                    except Exception:
+                        pass
+                # Sync callback path (called from thread pool, bridges to main loop via run_coroutine_threadsafe)
+                _sync_cb = globals().get('_screenshot_callback_sync')
+                if _sync_cb:
+                    try:
+                        _sync_cb(url, screenshot_b64)
+                    except Exception:
+                        pass
+
             # 1. Native status code check
             if hasattr(res, 'status_code') and res.status_code == 401:
                 auth_type = await self.check_http_auth(url)
@@ -213,7 +296,7 @@ class AgentCrawler:
                     if auth_type != "NONE":
                         return FetchResult(success=False, html="", is_http_auth=True, auth_type=auth_type, status_code=401)
             
-            return FetchResult(success=res.success, html=res.html, final_url=getattr(res, 'url', url))
+            return FetchResult(success=res.success, html=res.html, final_url=getattr(res, 'url', url), screenshot=screenshot_b64)
             
         except Exception as e:
             error_str = str(e)

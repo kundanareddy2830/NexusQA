@@ -776,7 +776,7 @@ async def worker(worker_id, queue, crawler, storage, strategy, visited_states, q
         finally:
             queue.task_done()
 
-async def run_agent(start_url):
+async def run_agent(start_url, frame_callback=None):
     storage = StorageManager()
     strategy = get_classification_strategy()
     start_domain = urlparse(start_url).netloc
@@ -807,7 +807,6 @@ async def run_agent(start_url):
 
     log_event("lifecycle", stage="agent_start", target=start_url)
     
-    # --- NEW SCHEMA: Ensure ScanSession node exists ---
     storage.init_scan_session(APP_ID, SESSION_ID)
     
     async def time_watcher():
@@ -822,7 +821,7 @@ async def run_agent(start_url):
                 [w.cancel() for w in workers]
                 break
 
-    async with AgentCrawler() as crawler:
+    async with AgentCrawler(frame_callback=frame_callback) as crawler:
         workers = [asyncio.create_task(worker(i, queue, crawler, storage, strategy, visited_states, queued_urls, start_domain, template_counter, global_state, auth_lock)) for i in range(CONCURRENT_WORKERS)]
         
         watcher_task = asyncio.create_task(time_watcher())

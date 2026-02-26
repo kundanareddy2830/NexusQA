@@ -1,41 +1,39 @@
 import React from 'react';
-import { Link2Off, EyeOff, LayoutTemplate, Bug } from 'lucide-react';
+import { EyeOff, LayoutTemplate, Bug } from 'lucide-react';
 
 const InsightsSection: React.FC = () => {
-    const insights = [
-        {
-            id: 1,
-            title: 'Broken Pages Detected',
-            description: 'Found 2 pages returning 404 errors during autonomous navigation.',
-            icon: <Link2Off size={20} />,
-            color: 'var(--status-danger)',
-            bg: 'rgba(239, 68, 68, 0.1)'
-        },
-        {
-            id: 2,
-            title: 'Unreachable Flows',
-            description: 'Checkout flow has dead ends. Users cannot proceed past step 2.',
-            icon: <EyeOff size={20} />,
-            color: 'var(--status-warning)',
-            bg: 'rgba(245, 158, 11, 0.1)'
-        },
-        {
-            id: 3,
-            title: 'High Complexity UI',
-            description: 'Settings page has 45+ interactive elements within a single viewport.',
-            icon: <LayoutTemplate size={20} />,
-            color: 'var(--accent-blue)',
-            bg: 'rgba(59, 130, 246, 0.1)'
-        },
-        {
-            id: 4,
-            title: 'Console Errors',
-            description: '3 occurrences of "Uncaught TypeError" detected in main bundle.',
-            icon: <Bug size={20} />,
-            color: 'var(--status-danger)',
-            bg: 'rgba(239, 68, 68, 0.1)'
-        }
-    ];
+    const [insights, setInsights] = React.useState<any[]>([]);
+
+    React.useEffect(() => {
+        fetch('/api/issues')
+            .then(res => res.json())
+            .then(data => {
+                const topIssues = data.slice(0, 4).map((issue: any) => {
+                    let icon = <Bug size={20} />;
+                    let color = 'var(--status-danger)';
+                    let bg = 'rgba(239, 68, 68, 0.1)';
+
+                    if (issue.type.includes('ACCESSIBILITY')) {
+                        icon = <EyeOff size={20} />;
+                        color = 'var(--accent-blue)';
+                        bg = 'rgba(59, 130, 246, 0.1)';
+                    } else if (issue.type.includes('STRUCTURAL') || issue.type.includes('SEMANTICS')) {
+                        icon = <LayoutTemplate size={20} />;
+                        color = 'var(--status-warning)';
+                        bg = 'rgba(245, 158, 11, 0.1)';
+                    }
+
+                    return {
+                        id: issue.id,
+                        title: `${issue.type.replace('_', ' ')} Detected`,
+                        description: issue.title,
+                        icon, color, bg
+                    };
+                });
+                setInsights(topIssues);
+            })
+            .catch(console.error);
+    }, []);
 
     return (
         <div className="white-card" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px', flex: 1.5 }}>

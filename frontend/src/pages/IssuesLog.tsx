@@ -1,14 +1,42 @@
 import React from 'react';
-import { AlertTriangle, Filter, Bug, LayoutTemplate, Link2Off, EyeOff } from 'lucide-react';
+import { Filter, Bug, LayoutTemplate, EyeOff } from 'lucide-react';
 
 const IssuesLog: React.FC = () => {
-    const issues = [
-        { id: 'ISS-001', severity: 'Critical', type: 'Broken Flow', location: '/checkout/payment', title: 'Payment completely unreachable from cart', age: '2 hours ago', icon: <Link2Off size={18} />, color: 'var(--status-danger)' },
-        { id: 'ISS-002', severity: 'High', type: 'Console Error', location: '/dashboard', title: 'TypeError: Cannot read properties of undefined (reading "map")', age: '5 hours ago', icon: <Bug size={18} />, color: 'var(--status-danger)' },
-        { id: 'ISS-003', severity: 'Medium', type: 'UI Spacing', location: '/settings/profile', title: 'Save button overlaps with input field on mobile viewport', age: '1 day ago', icon: <LayoutTemplate size={18} />, color: 'var(--status-warning)' },
-        { id: 'ISS-004', severity: 'Medium', type: 'Dead End', location: '/docs/api-v2', title: 'Documentation link leads to empty 404 block', age: '1 day ago', icon: <EyeOff size={18} />, color: 'var(--status-warning)' },
-        { id: 'ISS-005', severity: 'Low', type: 'Accessibility', location: '/login', title: 'Contrast ratio on secondary buttons falls below WCAG AA', age: '2 days ago', icon: <AlertTriangle size={18} />, color: 'var(--accent-blue)' },
-    ];
+    const [issues, setIssues] = React.useState<any[]>([]);
+
+    React.useEffect(() => {
+        fetch('/api/issues')
+            .then(res => res.json())
+            .then(data => {
+                const formatted = data.map((issue: any) => {
+                    let icon = <Bug size={18} />;
+                    let color = 'var(--status-warning)';
+
+                    if (issue.severity === 'Critical') {
+                        color = 'var(--status-danger)';
+                    } else if (issue.severity === 'High') {
+                        color = 'var(--status-danger)';
+                    } else if (issue.type.includes('ACCESSIBILITY')) {
+                        icon = <EyeOff size={18} />;
+                        color = 'var(--accent-blue)';
+                    } else if (issue.type.includes('STRUCTURAL') || issue.type.includes('SEMANTICS')) {
+                        icon = <LayoutTemplate size={18} />;
+                    }
+
+                    return {
+                        id: issue.id,
+                        severity: issue.severity,
+                        type: issue.type,
+                        location: issue.location,
+                        title: issue.title,
+                        age: issue.age,
+                        icon, color
+                    };
+                });
+                setIssues(formatted);
+            })
+            .catch(console.error);
+    }, []);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', height: '100%' }}>

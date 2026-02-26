@@ -69,14 +69,7 @@ const Landing: React.FC = () => {
                 padding: '24px 64px', maxWidth: '1400px', margin: '0 auto'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => navigate('/')}>
-                    <div style={{
-                        width: '40px', height: '40px', borderRadius: '50%', background: 'var(--accent-teal)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold',
-                        fontSize: '1.2rem'
-                    }}>
-                        N
-                    </div>
-                    <span style={{ fontSize: '1.75rem', fontWeight: 800 }}>
+                    <span style={{ fontSize: '2.1rem', fontWeight: 800 }}>
                         Nexus<span style={{ color: 'var(--accent-blue)' }}>QA</span>
                     </span>
                 </div>
@@ -212,26 +205,26 @@ const Landing: React.FC = () => {
                             ]
                         }
                     ].map((item, i) => (
-                        <div key={i} className="white-card" style={{ flex: 1, padding: '40px 32px', textAlign: 'left', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <div style={{ color: 'var(--accent-blue)', fontWeight: 700, marginBottom: '16px', fontSize: '0.9rem' }}>{item.step}</div>
+                        <div key={i} className="white-card" style={{ flex: 1, padding: '32px 24px', textAlign: 'left', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div style={{ color: 'var(--accent-blue)', fontWeight: 700, marginBottom: '12px', fontSize: '0.9rem' }}>{item.step}</div>
                             <div style={{
-                                width: '72px', height: '72px', margin: '0 auto 24px',
+                                width: '64px', height: '64px', margin: '0 auto 16px',
                                 background: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-blue)',
                                 borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center'
                             }}>
                                 {item.icon}
                             </div>
-                            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '12px', textAlign: 'center' }}>{item.title}</h3>
-                            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem', textAlign: 'center', marginBottom: '32px', minHeight: '48px' }}>{item.desc}</p>
+                            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '8px', textAlign: 'center' }}>{item.title}</h3>
+                            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.5, fontSize: '0.9rem', textAlign: 'center', marginBottom: '24px', minHeight: '40px' }}>{item.desc}</p>
 
                             <div style={{ marginTop: 'auto', width: '100%', display: 'flex', justifyContent: 'center' }}>
-                                <ul style={{ listStyle: 'none', padding: 0, margin: 0, width: 'fit-content', display: 'flex', flexDirection: 'column', gap: '12px', textAlign: 'left' }}>
+                                <ul style={{ listStyle: 'none', padding: 0, margin: 0, width: 'fit-content', display: 'flex', flexDirection: 'column', gap: '16px', textAlign: 'left' }}>
                                     {item.bullets.map((bullet, idx) => (
-                                        <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                                            <div style={{ paddingTop: '5px', flexShrink: 0 }}>
+                                        <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
+                                            <div style={{ paddingTop: '6px', flexShrink: 0 }}>
                                                 <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-teal)' }} />
                                             </div>
-                                            <span style={{ lineHeight: 1.4 }}>{bullet}</span>
+                                            <span style={{ lineHeight: 1.5 }}>{bullet}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -247,13 +240,7 @@ const Landing: React.FC = () => {
                 borderTop: '1px solid var(--border-light)'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '16px' }}>
-                    <div style={{
-                        width: '24px', height: '24px', borderRadius: '50%', background: 'var(--accent-teal)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.75rem'
-                    }}>
-                        N
-                    </div>
-                    <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>
+                    <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>
                         Nexus<span style={{ color: 'var(--accent-blue)' }}>QA</span>
                     </span>
                 </div>

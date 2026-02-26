@@ -2,21 +2,26 @@ import React from 'react';
 import { Share2, AlertCircle } from 'lucide-react';
 
 const StructuralOverview: React.FC = () => {
-    // Simple mocked positions for nodes
-    const nodes = [
-        { id: '1', label: 'Home', x: 20, y: 50, status: 'healthy' },
-        { id: '2', label: 'Login', x: 50, y: 30, status: 'healthy' },
-        { id: '3', label: 'Dashboard', x: 50, y: 70, status: 'healthy' },
-        { id: '4', label: 'Billing', x: 80, y: 20, status: 'risky' },
-        { id: '5', label: 'Settings', x: 80, y: 80, status: 'healthy' },
-    ];
+    const [nodes, setNodes] = React.useState<any[]>([]);
+    const [connections, setConnections] = React.useState<any[]>([]);
 
-    const connections = [
-        { from: '1', to: '2' },
-        { from: '1', to: '3' },
-        { from: '3', to: '4' },
-        { from: '3', to: '5' },
-    ];
+    React.useEffect(() => {
+        fetch('/api/graph')
+            .then(res => res.json())
+            .then(data => {
+                // Layout algorithm (simple circular distribution layout)
+                const arrangedNodes = data.nodes.map((n: any, i: number) => {
+                    const angle = (i / data.nodes.length) * 2 * Math.PI;
+                    const radius = 35; // % from center
+                    const x = 50 + radius * Math.cos(angle);
+                    const y = 50 + radius * Math.sin(angle);
+                    return { ...n, x, y };
+                });
+                setNodes(arrangedNodes);
+                setConnections(data.connections);
+            })
+            .catch(console.error);
+    }, []);
 
     return (
         <div className="white-card" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px', flex: 2 }}>

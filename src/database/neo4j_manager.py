@@ -1,9 +1,13 @@
 from neo4j import GraphDatabase
 import json
 import hashlib
+import os
 
 class StorageManager:
-    def __init__(self, uri="bolt://localhost:7687", user="neo4j", password="password"):
+    def __init__(self, uri=None, user=None, password=None):
+        uri = uri or os.getenv("NEO4J_URI", "bolt://localhost:7687")
+        user = user or os.getenv("NEO4J_USER", "neo4j")
+        password = password or os.getenv("NEO4J_PASSWORD", "password")
         self.driver = GraphDatabase.driver(uri, auth=(user, password))
 
     def close(self):

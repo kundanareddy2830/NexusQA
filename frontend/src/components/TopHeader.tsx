@@ -1,5 +1,6 @@
 import React from 'react';
-import { Search, Zap } from 'lucide-react';
+import { Search, Zap, ChevronLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface TopHeaderProps {
     onAnalyze?: (url: string) => void;
@@ -8,11 +9,12 @@ interface TopHeaderProps {
 
 const TopHeader: React.FC<TopHeaderProps> = ({ onAnalyze, isAnalyzed }) => {
     const [url, setUrl] = React.useState('');
+    const navigate = useNavigate();
     return (
         <header style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'flex-end', // Align items to the right since the title is gone
+            justifyContent: 'space-between',
             padding: '16px 32px',
             margin: '20px',
             marginLeft: '0',
@@ -26,6 +28,30 @@ const TopHeader: React.FC<TopHeaderProps> = ({ onAnalyze, isAnalyzed }) => {
             minHeight: '80px' // Keep a consistent height even if empty
         }}>
             {/* Removed the redundant NexusQA Dashboard title as requested */}
+
+            {/* ── Back button (always visible) ── */}
+            <button
+                onClick={() => navigate(-1)}
+                style={{
+                    display: 'flex', alignItems: 'center', gap: '5px',
+                    background: 'none', border: '1px solid var(--border-light)',
+                    borderRadius: '8px', padding: '7px 14px',
+                    color: 'var(--text-secondary)', fontWeight: 600,
+                    fontSize: '0.82rem', cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                }}
+                onMouseEnter={e => {
+                    e.currentTarget.style.background = 'var(--bg-tertiary)';
+                    e.currentTarget.style.color = 'var(--text-primary)';
+                }}
+                onMouseLeave={e => {
+                    e.currentTarget.style.background = 'none';
+                    e.currentTarget.style.color = 'var(--text-secondary)';
+                }}
+            >
+                <ChevronLeft size={15} strokeWidth={2.5} />
+                Back
+            </button>
 
             {isAnalyzed && (
                 <div className="header-actions" style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>

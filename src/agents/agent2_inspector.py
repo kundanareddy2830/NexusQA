@@ -151,26 +151,25 @@ def run_inspector():
         for scanner in scanners:
             page_issues.extend(scanner.scan(state))
             
-        if page_issues:
-            for i in page_issues:
-                # Contextual Escalation 
-                if intent in ["TRANSACTIONAL", "AUTHENTICATION", "ADMIN_OR_CRITICAL"]:
-                    if i['severity'] == "LOW":
-                        i['severity'] = "MEDIUM"
-                        i['description'] = f"[ESCALATED due to {intent} context] " + i['description']
-                    elif i['severity'] == "MEDIUM":
-                        i['severity'] = "HIGH"
-                        i['description'] = f"[ESCALATED due to {intent} context] " + i['description']
+        for i in page_issues:
+            # Contextual Escalation 
+            if intent in ["TRANSACTIONAL", "AUTHENTICATION", "ADMIN_OR_CRITICAL"]:
+                if i['severity'] == "LOW":
+                    i['severity'] = "MEDIUM"
+                    i['description'] = f"[ESCALATED due to {intent} context] " + i['description']
+                elif i['severity'] == "MEDIUM":
+                    i['severity'] = "HIGH"
+                    i['description'] = f"[ESCALATED due to {intent} context] " + i['description']
 
-                # AI Decision Moment
-                risk_score = state.get('ai_intel', {}).get('composition_vector', {}).get('risk_score', 0)
-                i['ai_insight'] = get_llm_business_insight(intent, i['type'], i['description'])
-                    
-                storage.save_issue(state_id, i, APP_ID, session_id)
-                severity_counts[i['severity']] += 1
-                layer_counts[i['layer']] += 1
-                total_issues += 1
-                log_event("issue_found", url=url, issue_type=i["type"], severity=i["severity"], layer=i["layer"], description=i["description"], ai_insight=i.get("ai_insight"))
+            # AI Decision Moment
+            risk_score = state.get('ai_intel', {}).get('composition_vector', {}).get('risk_score', 0)
+            i['ai_insight'] = get_llm_business_insight(intent, i['type'], i['description'])
+                
+            storage.save_issue(state_id, i, APP_ID, session_id)
+            severity_counts[i['severity']] += 1
+            layer_counts[i['layer']] += 1
+            total_issues += 1
+            log_event("issue_found", url=url, issue_type=i["type"], severity=i["severity"], layer=i["layer"], description=i["description"], ai_insight=i.get("ai_insight"))
     storage.close()
     
     log_event("lifecycle", stage="agent_shutdown", total_issues=total_issues, severity_summary=severity_counts, layer_summary=layer_counts)

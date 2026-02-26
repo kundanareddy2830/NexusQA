@@ -1,74 +1,161 @@
-# NexusQA 🤖 Quality Intelligence Engine
+<div align="center">
+  <h1>NexusQA 🤖 Autonomous Quality Intelligence Engine</h1>
+  <p><strong>Shifting enterprise Software Testing away from "Blind Execution" to "Intelligent Exploration"</strong></p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-**Autonomous Multimodal QA Intelligence Engine**
-
-NexusQA is an autonomous, multi-agent AI Quality Intelligence Platform that shifts enterprise Software Testing (QA) away from "Blind Execution" (running hardcoded scripts) to "Intelligent Exploration" (AI agents that autonomously reverse-engineer, test, and self-heal applications).
-
-Give it a URL, and our Tri-Agent AI autonomously maps the application into a Neo4j knowledge graph, intercepts network telemetry to find vulnerabilities, and writes the Playwright debugging script for the developer automatically.
-
----
-
-## 🚨 The Problem: Why NexusQA is Needed
-
-Modern enterprise software is failing at the testing layer. QA teams are crippled by three major industry flaws:
-
-1. **The Maintenance Nightmare (Brittle Scripts):** Traditional tools like Selenium and Cypress require humans to write exact scripts. When a developer changes a single button ID, the entire test suite breaks.
-2. **Execution vs. Reasoning:** Current tools only do exactly what they are told (Pass/Fail). They cannot explore unknown features, correlate frontend UI glitches with backend API network errors, or reason about business impact.
-3. **Tool Fragmentation:** Enterprises use one tool for UI testing, another for API testing, and another for Security. There is no unified "intelligence layer".
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/)
+  [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)](https://fastapi.tiangolo.com)
+  [![React](https://img.shields.io/badge/React-19.2.0-61DAFB.svg)](https://react.dev/)
+  [![Neo4j](https://img.shields.io/badge/Neo4j-Graph_DB-blue.svg)](https://neo4j.com/)
+  [![Playwright](https://img.shields.io/badge/Playwright-E2E_Testing-2EAD33.svg)](https://playwright.dev/)
+</div>
 
 ---
 
-## ⚙️ How It Works: The Tri-Agent Architecture
+## 🌟 The Vision & The Problem We Solve
 
-To solve these problems, NexusQA abandons traditional scripting entirely. It is built as a **Tri-Agent DevSecOps Architecture** that communicates through a Neo4j Graph Database.
+Modern enterprise software testing is crippled by fundamental industry flaws:
 
-### 🗺️ Step 1: Map the Unknown (Agent 1 - The Cartographer)
-* Navigates the target web application like a real human.
-* Uses **Heuristic Fuzzing** to type into search bars and trigger hidden Javascript dropdowns.
-* Uses **Structural Fingerprinting** to recognize page layouts, building a massive "Semantic Digital Twin" (a mapped FSM graph) of the application inside Neo4j.
+1. **The Maintenance Nightmare (Brittle Scripts):** Traditional tools like Selenium and Cypress force QA teams to write exact, rigid scripts telling the computer exactly what to click. When a developer changes a single button ID, the entire test suite breaks. Engineers spend up to 60% of their time fixing old tests instead of finding new bugs.
+2. **Execution vs. Reasoning:** Current tools are "blind engines"—they only do exactly what they're told. They run a script and report Pass/Fail. They cannot explore unknown features, cannot correlate frontend UI glitches with backend API network errors, and cannot reason about business impact.
+3. **Tool Fragmentation:** Enterprises use separate tools for UI testing, API testing, and Security scanning, lacking a unified "intelligence layer."
 
-### 🕵️‍♂️ Step 2: Contextual Vulnerability Scanning (Agent 2 - The Inspector)
-* Once the map is built, it inspects every single state.
-* Operating as a **Light Gray-Box Engine**, it intercepts hidden network API payloads, catches Javascript console errors, and scans the DOM for Accessibility and Security flaws.
-* Uses AI to dynamically escalate severity based on context (e.g., a missing ARIA label on a blog is "Low", but on a Checkout page, it escalates to "High").
+**Enter NexusQA.**
 
-### 👔 Step 3: Executive Reporting & Auto-Healing (Agent 3 - The Strategist)
-* Aggregates the defect data into an **Executive Hygiene Score (0-100)** for C-Level visibility.
-* **The Healer:** Autonomously reads the database graph and writes a deterministic, ready-to-run Python Playwright script that reproduces the exact vulnerability, saving developers hours of manual debugging.
+NexusQA abandons traditional scripting entirely. Give it a URL, and our system autonomously maps the application into a Neo4j knowledge graph, intercepts network telemetry to find hidden vulnerabilities, scores business risk, and writes the Playwright debugging script for the developer automatically. We act as an AI-driven quality inspector that continuously explores, analyzes, and evaluates applications independently.
 
 ---
 
-## 💎 Business Value
+## 🏗️ Architecture: The Tri-Agent DevSecOps Engine
 
-NexusQA introduces **Zero-Friction Onboarding**. We don't need access to backend source code or private AWS servers. We provide maximum value from the outside-in.
+NexusQA is powered by a multi-agent orchestrated architecture that communicates through a Neo4j Graph Database:
 
-* **Eliminate Script Maintenance:** The AI maps the application dynamically on every run; it doesn't rely on brittle XPaths.
-* **Accelerate CI/CD:** Finding bugs, classifying their severity, and writing the reproduction script happens in minutes, autonomously.
-* **Bridge the Dev/QA Gap:** Developers no longer get vague "test failed" messages. They receive a precise hygiene score, a network-level root cause, and the exact code script to reproduce the failure.
+### 🗺️ Agent 1: The Cartographer (Map the Unknown)
+- Operates autonomously to navigate the target web application like a human tester.
+- Handles SPAs, complex interactivity, authentication, and multi-step forms.
+- Employs **Heuristic Fuzzing** to type into search bars and trigger hidden Javascript layers.
+- Uses **Structural Fingerprinting** to recognize page layouts and build a massive "Semantic Digital Twin" (a mapped graph) of the application inside Neo4j.
+
+### 🕵️‍♂️ Agent 2: The Inspector (Contextual Discovery)
+- Operates as a **Light Gray-Box Engine**, monitoring DOM structure, intercepting hidden network API payloads, and catching Javascript console errors.
+- Scans for accessibility flaws (e.g., missing ARIA labels), security vulnerabilities, and logic defects.
+- Evaluates the context of bugs (e.g., a missing ARIA label on a blog is "Low", but on a Checkout page, it escalates to "High").
+
+### 👔 Agent 3: The Strategist (Executive Reporting & Auto-Healing)
+- Aggregates the intelligence mapped in the Neo4j Graph into an **Executive Hygiene Score (0-100)** for C-Level leadership.
+- Generates reproducible risk profiles.
+- **The Healer:** Autonomously reads the database graph and writes a definitive, deterministic Python Playwright script that reproduces the exact vulnerability, saving engineering teams hours of manual debugging.
 
 ---
 
-## 🏗️ Directory Structure
+## 🔀 Codeflow & System Interactions
 
-- `src/agents/`: The orchestration layer (Agent 1: Cartographer, Agent 2: Inspector, Agent 3: Strategist).
-- `src/core/`: The foundational extraction, fingerprinting, and interaction logic.
-- `src/scanners/`: The DevSecOps rulesets (DOM Hygiene, Business Logic).
-- `src/database/`: The Neo4j Graph persistence layer.
-- `scripts/`: Operational utility scripts.
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend as React + Vite Dashboard
+    participant API as FastAPI Server
+    participant Carto as Agent 1 (Cartographer)
+    participant Insp as Agent 2 (Inspector)
+    participant Strat as Agent 3 (Strategist)
+    participant Graph as Neo4j Graph Database
+    
+    User->>Frontend: Submit target URL
+    Frontend->>API: HTTP POST /api/agent/start
+    
+    rect rgb(20, 40, 60)
+    Note over API, Graph: Phase 1: Exploration
+    API->>Carto: Trigger Automated Crawl
+    Carto->>Graph: Map Navigation States, Nodes & Routes
+    Carto-->>Frontend: WebSocket: Live Frame Steaming & Logs
+    end
+
+    rect rgb(60, 40, 20)
+    Note over API, Graph: Phase 2: Vulnerability Analysis
+    User->>Frontend: Request Deep Analysis
+    Frontend->>API: HTTP POST /api/agent2/start
+    API->>Insp: Trigger Security & DOM Scan
+    Insp->>Graph: Fetch App Architecture Map
+    Insp-->>Insp: Light Gray-box network & state analysis
+    Insp->>Graph: Link Issues (Type/Loc/Severity) to Page Nodes
+    Insp-->>Frontend: WebSocket: Live Defect Stream
+    end
+
+    rect rgb(20, 60, 40)
+    Note over API, Graph: Phase 3: Reporting & Healing
+    User->>Frontend: Request Risk Report
+    Frontend->>API: HTTP POST /api/agent3/start
+    API->>Strat: Execute Heuristic Aggregation 
+    Strat->>Graph: Query issue distribution & edge counts
+    Strat-->>Strat: Generate Auto-Healing Playwright Scripts
+    Strat-->>Frontend: Return Hygiene Score & Playwright Code
+    end
+```
+
+---
+
+## 💻 Tech Stack & Engineering Justifications
+
+Our system is engineered for maximum performance, real-time feedback, and dynamic scalability.
+
+- **Frontend (React 19 + Vite + Tailwind CSS + Lucide):** 
+  Chosen to build an enterprise-grade SaaS dashboard with a dynamic UI layout. Vite provides a blazing fast development build step, while React 19 handles the complex state logic necessary for real-time visual streaming and WebSocket log management.
+- **Backend Infrastructure (FastAPI + Python + AsyncIO):** 
+  Selected for its native WebSockets support and asynchronous processing. Since AI task orchestration and browser interactions (Playwright) are highly I/O bound, `asyncio` and FastAPIs concurrency guarantees keep our connection manager streaming video and log frames seamlessly without blocking CPU threads. We implemented dedicated ProactorEventLoops to manage sub-process integrity on Windows.
+- **Graph Knowledge Base (Neo4j):** 
+  Relational (SQL) and Document (NoSQL) databases are not designed to natively represent interconnected paths. Web applications are fundamentally state-machines. Neo4j allows us to natively query complex navigational sequences (e.g., "Find all paths from `Dashboard` to `Settings` that triggered `CRITICAL` issues") efficiently.
+- **Browser Automation Core (Playwright):** 
+  Used over Selenium for its robust DevTools protocol implementation. Playwright allows deep inspection into active network requests, the DOM lifecycle, and websocket frames within the browser, allowing us to build an accurate light gray-box analytical engine.
+
+---
+
+## 🛡️ Comprehensive Test Cases (TC) Discovered Autonomously
+
+Unlike rigid scripted QA, NexusQA's semantic mapping independently discovers defects across multiple vectors:
+
+1. **State Transients & Broken Flows:**
+   - Identification of infinite loops within wizard-styled forms.
+   - Validation failures terminating complete user journeys.
+2. **Network Payload Anomalies:**
+   - Failing background APIs causing silent frontend faults.
+   - Malformed data responses mapped natively to DOM rendering glitches.
+3. **UI/UX Consistency & Hygiene:**
+   - Overlapping elements, non-responsive viewport breakdowns, and unhandled Javascript Console errors.
+4. **Security & Accessibility Scanning:**
+   - Missing ARIA boundaries (`role`, `tabindex`, `aria-label`).
+   - Unauthorized path accessibility across the app topology.
+   - Unsanitized inputs triggering frontend structural breakdowns.
 
 ---
 
 ## 🚀 Getting Started
 
-1. **Start the Neo4j Database:**
+To spin up the local development suite and explore an application autonomously:
+
+1. **Start the Required Database:**
    ```bash
    docker-compose up -d
    ```
+   *(Ensure Neo4j is running the graph instance)*
 
-2. **Run the Autonomous Pipeline:**
-   Use the central entry point to run the QA engine:
+2. **Boot the Backend API (FastAPI):**
    ```bash
-   python -m src.main
+   cd src
+   pip install -r ../requirements.txt
+   uvicorn api.server:app --reload --port 8000
    ```
+
+3. **Launch the Intelligence Dashboard (React):**
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+4. **Initialize Exploration:**
+   Open the Dashboard, put in any target URL, and watch NexusQA map, inspect, and self-heal the app.
+
+---
+<div align="center">
+    <i>NexusQA - Autonomous Software Exploration. Driven by Graph Intelligence.</i>
+</div>
